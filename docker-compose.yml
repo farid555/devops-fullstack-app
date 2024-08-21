@@ -1,0 +1,43 @@
+services:
+  goapp:
+    container_name: goapp
+    image: goapp:1.0.0
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: 'postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}?sslmode=disable'
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+    
+
+  db:
+    container_name: db
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    
+
+  
+  frontend:
+    container_name: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    depends_on:
+      - goapp
+    
+
+volumes:
+  pgdata: {}

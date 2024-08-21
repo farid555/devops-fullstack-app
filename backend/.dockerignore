@@ -1,0 +1,25 @@
+# Ignore version control system directories
+.git/
+.svn/
+
+# Ignore editor and IDE files
+.vscode/
+.idea/
+
+# Ignore Go binary files
+*.exe
+*.dll
+*.so
+
+# Ignore test and CI artifacts
+*.test
+*.profile
+.cov
+
+# Ignore documentation and example files
+/docs/
+/examples/
+
+# Ignore build artifacts
+bin/
+pkg/

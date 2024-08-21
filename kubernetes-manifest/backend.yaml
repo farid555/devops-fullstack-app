@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: management_app
+  labels:
+    app: backend
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 25%
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: fariduzzaman555/backend-ema-api:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: POSTGRES_URI
+          valueFrom:
+            secretKeyRef:
+              name: postgres-secret
+              key: postgres-uri
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: management_app
+spec:
+  selector:
+    app: backend
+  ports:
+  - port: 3000
+    protocol: TCP
+  type: ClusterIP
+  
